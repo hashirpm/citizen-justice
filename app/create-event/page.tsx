@@ -30,10 +30,8 @@ import { createEvent } from "@/components/lib/contract-txns";
 import { toast } from "@/components/hooks/use-toasts";
 
 const categories = [
-    { id: "1", name: "Security" },
-    { id: "2", name: "Environment" },
-    { id: "3", name: "Public Safety" },
-    { id: "4", name: "Infrastructure" },
+    { id: "0", name: "Security" },
+   
 ];
 
 const formSchema = z.object({
