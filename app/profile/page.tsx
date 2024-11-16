@@ -12,12 +12,14 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Award, FileText } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { getUserDetails } from "@/components/lib/graph";
+import { User } from "@/components/lib/types";
 
 // Mock data - replace with actual data fetching
-const mockUser = {
+const mockuser = {
     id: "0x123",
     isVerified: true,
     reputationPoints: BigInt(100),
@@ -52,12 +54,24 @@ export default function Profile() {
 
     const { data: session } = useSession();
     const router = useRouter();
+    const [user, setUser] = useState<User | null>(null)
 
     useEffect(() => {
         if (!session) {
             router.push("/login");
         }
-    }, [])
+
+        async function fetchData() {
+            console.log(session)
+            let userData = await getUserDetails(session?.user?.name)
+            setUser(userData)
+        }
+
+        fetchData()
+
+    }, [session?.user])
+
+
 
     return (
         <div className="container max-w-md mx-auto p-4">
@@ -65,7 +79,7 @@ export default function Profile() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <span>Profile</span>
-                        {mockUser.isVerified && (
+                        {user?.isVerified && (
                             <CheckCircle className="h-5 w-5 text-primary" />
                         )}
                     </CardTitle>
@@ -74,19 +88,19 @@ export default function Profile() {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">ID</span>
-                            <span>{mockUser.id.toString().slice(0, 6)}...</span>
+                            <span>{user?.id.toString().slice(0, 6)}...</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Reputation</span>
                             <Badge variant="secondary" className="flex items-center gap-1">
                                 <Award className="h-4 w-4" />
-                                {mockUser.reputationPoints.toString()}
+                                {user?.reputationPoints.toString()}
                             </Badge>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Success Rate</span>
                             <span>
-                                {(Number(mockUser.acceptedSubmissions) / Number(mockUser.totalSubmissions) * 100).toFixed(0)}%
+                                {(Number(user?.acceptedSubmissions) / Number(user?.totalSubmissions) * 100).toFixed(0)}%
                             </span>
                         </div>
                     </div>
@@ -109,7 +123,7 @@ export default function Profile() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {mockUser.createdEvents.map((event) => (
+                            {user?.createdEvents.map((event) => (
                                 <TableRow key={event.id}>
                                     <TableCell>{event.description}</TableCell>
                                     <TableCell>
@@ -132,12 +146,12 @@ export default function Profile() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {mockUser.evidences.map((evidence) => (
+                            {user?.evidences.map((evidence) => (
                                 <TableRow key={evidence.id}>
-                                    <TableCell>{evidence.eventId}</TableCell>
+                                    <TableCell>{evidence.id}</TableCell>
                                     <TableCell>
-                                        <Badge variant={evidence.status === "Accepted" ? "default" : "secondary"}>
-                                            {evidence.status}
+                                        <Badge >
+                                            "evidence.status"
                                         </Badge>
                                     </TableCell>
                                 </TableRow>
@@ -146,9 +160,9 @@ export default function Profile() {
                     </Table>
                 </TabsContent>
 
-                <TabsContent value="categories">
+                {/* <TabsContent value="categories">
                     <div className="space-y-2">
-                        {mockUser.categories.map((category) => (
+                        {user?.categories.map((category) => (
                             <div
                                 key={category.id}
                                 className="flex items-center gap-2 p-3 rounded-lg border"
@@ -158,7 +172,7 @@ export default function Profile() {
                             </div>
                         ))}
                     </div>
-                </TabsContent>
+                </TabsContent> */}
             </Tabs>
         </div>
     );
