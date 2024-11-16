@@ -151,7 +151,7 @@ export default function Profile() {
                                     <TableCell>{evidence.id}</TableCell>
                                     <TableCell>
                                         <Badge >
-                                            "evidence.status"
+                                            evidence.status
                                         </Badge>
                                     </TableCell>
                                 </TableRow>
