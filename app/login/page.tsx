@@ -13,10 +13,10 @@ export default function Login() {
     const { data: session } = useSession();
 
     useEffect(() => {
-        if (session) {
+        if (session?.user) {
             router.push("/");
         }
-    }, [])
+    }, [session])
 
     const handleLogin = async () => {
         // Implement World ID login logic here
