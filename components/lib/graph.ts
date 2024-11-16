@@ -13,7 +13,7 @@ export const getUserDetails = async (
                     acceptedSubmissions
                     id
                     identityHash
-                    attestaionId
+                    attestationId
                     isVerified
                     reputationPoints
                     totalSubmissions
