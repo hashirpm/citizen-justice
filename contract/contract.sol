@@ -82,7 +82,7 @@ contract CitizenJusticePlatform {
     event EvidenceSubmitted(uint256 indexed evidenceId,uint256 eventId, address indexed submitter,string evidenceHash,string geoLocation,string metadata);
     event CategoryAdded(uint256 indexed eventId, uint256 indexed categoryId);
     event EvidenceValidated(uint256 indexed evidenceId, uint256 indexed categoryId, bool isValid, address validator);
-    event CategoryCreated(uint256 indexed categoryId, string name,string description);
+    event CategoryCreated(uint256 indexed categoryId,address validator, string name,string description);
     event EventCreated(uint256 indexed eventId, string description,string location,address creator,uint256[] categoryIds);
     event EventDeactivated(uint256 indexed eventId);
     event ReputationRewarded(address user,uint256 points);
@@ -145,7 +145,7 @@ contract CitizenJusticePlatform {
         newCategory.isActive = true;
         newCategory.validators.push(msg.sender);
         
-        emit CategoryCreated(newCategoryId, _name,_description);
+        emit CategoryCreated(newCategoryId,msg.sender, _name,_description);
     }
 
     // Evidence Submission Functions
@@ -163,7 +163,7 @@ contract CitizenJusticePlatform {
             require(events[_eventId].isActive, "Event not active");
         }
         
-       
+       evidenceCount++;
         Evidence storage newEvidence = evidenceRegistry[evidenceCount];
         
         // Create SubmitterInfo with current user data
@@ -190,7 +190,7 @@ contract CitizenJusticePlatform {
         }
         
         users[msg.sender].totalSubmissions++;
-           evidenceCount++;
+           
         emit EvidenceSubmitted(evidenceCount,_eventId, msg.sender,_evidenceHash,_geoLocation,_metadata);
         for (uint256 i = 0; i < _categoryIds.length; i++) {
             emit CategoryAdded(_eventId, _categoryIds[i]);
@@ -204,7 +204,8 @@ contract CitizenJusticePlatform {
         require(bytes(_description).length > 0, "Description cannot be empty");
         require(bytes(_location).length > 0, "Location cannot be empty");
         require(_categoryIds.length > 0, "At least one category required");
-        
+        eventCount++;
+
        
         Event storage newEvent = events[eventCount];
         
@@ -214,7 +215,6 @@ contract CitizenJusticePlatform {
         newEvent.isActive = true;
         newEvent.creator = msg.sender;
         newEvent.categoryIds = _categoryIds;
-         eventCount++;
         emit EventCreated(eventCount, _description,_location,msg.sender,_categoryIds);
     }
     
