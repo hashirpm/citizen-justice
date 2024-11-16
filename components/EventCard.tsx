@@ -199,8 +199,19 @@ export default function EventCard({ event }: { event: Event }) {
                   View Transaction on Blockscout
                 </a>
               )}
-              <button onClick={handleViewImage}>
-                View uploaded evidence from Nillion
+              <button
+                onClick={handleViewImage}
+                className="text-blue-600 hover:underline mt-4"
+                disabled={isFetching}
+              >
+                {isFetching ? (
+                  <>
+                    <Loader className="h-4 w-4 mr-2 animate-spin" />
+                    Fetching...
+                  </>
+                ) : (
+                  <>View uploaded evidence from Nillion</>
+                )}
               </button>
               {storedImageUrl && (
                 <div>
@@ -300,18 +311,9 @@ export default function EventCard({ event }: { event: Event }) {
             )}
           </Button>
           {/* <p>{status}</p> */}
-          <Button variant="outline" className="w-full" disabled={isFetching}>
-            {isFetching ? (
-              <>
-                <Loader className="h-4 w-4 mr-2 animate-spin" />
-                Fetching...
-              </>
-            ) : (
-              <>
-                <Image className="h-4 w-4 mr-2" />
-                Show Evidences
-              </>
-            )}
+          <Button variant="outline" className="w-full">
+            <Image className="h-4 w-4 mr-2" />
+            Show Evidences
           </Button>
         </div>
       </DialogContent>
