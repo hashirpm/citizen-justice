@@ -1,7 +1,6 @@
 import { Keyring } from "@polkadot/api";
 import { SDK } from "avail-js-sdk";
 import { WaitFor } from "avail-js-sdk/sdk/transactions";
-import { SignerOptions } from "@polkadot/api/types";
 
 const submitAndRecieveData = async () => {
   const providerEndpoint = "wss://turing-rpc.avail.so/ws";
