@@ -25,9 +25,6 @@ export default function Login() {
     router.push("/");
   };
 
-  const handleAvail = async () => {
-    await submitAndRecieveData();
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -43,13 +40,7 @@ export default function Login() {
             <Globe className="h-5 w-5" />
             Login with World ID
           </Button>
-          <Button
-            onClick={handleAvail}
-            className="w-full flex items-center justify-center gap-2 text-lg h-12"
-          >
-            <Globe className="h-5 w-5" />
-            Send to Avail
-          </Button>
+        
         </CardContent>
       </Card>
     </div>

@@ -17,7 +17,7 @@ if (!GEMINI_API_KEY || !PRIVATE_KEY) {
 
 // Create a new instance of GoogleGenerativeAI with the current API key
 function createGenAIInstance(): GoogleGenerativeAI {
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+  const GEMINI_API_KEY = "AIzaSyCmHmyTnhofdOwI6vnoiS8wXyBWBez4mQU";
 
   if (!GEMINI_API_KEY) {
     throw new Error("Environment variable GEMINI_API_KEY is required.");
