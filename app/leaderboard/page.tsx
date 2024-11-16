@@ -61,7 +61,7 @@ export default function Leaderboard() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {leaderboardData.map((user) => (
+                        {mockUsers.map((user) => (
                             <TableRow key={user.id.toString()}>
                                 <TableCell className="flex items-center gap-2">
                                     {user.id.toString().slice(0, 6)}...
