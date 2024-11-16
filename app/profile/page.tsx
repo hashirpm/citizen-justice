@@ -94,15 +94,15 @@ export default function Profile() {
 
   const handleVerify = async () => {
     try {
-      const result = await indexService.queryAttestation(
-        "onchain_evm_534351_0xb1"
-      );
-      console.log("Attestation query result:", result);
-      if (result?.transactionHash) {
-        setTxHash(result?.transactionHash);
-      }
+      if (user?.attestationId) {
+        const result = await indexService.queryAttestation(user?.attestationId);
+        console.log("Attestation query result:", result);
+        if (result?.transactionHash) {
+          setTxHash(result?.transactionHash);
+        }
 
-      return result;
+        return result;
+      }
     } catch (error) {
       console.error("Error verifying invoice:", error);
       throw error;
