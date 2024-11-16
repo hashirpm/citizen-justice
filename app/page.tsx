@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <div className="container max-w-md mx-auto p-4">
-      <WelcomeDialog />
+      {/* <WelcomeDialog /> */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Events</h1>
         <Link href="/create-event">
