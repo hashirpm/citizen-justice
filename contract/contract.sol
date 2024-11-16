@@ -18,9 +18,9 @@ contract CitizenJusticePlatform {
     struct SubmitterInfo {
         address userAddress;
         string identityHash;
-        uint256 reputationAtSubmission;
-        uint256 totalSubmissionsAtTime;
-        uint256 acceptedSubmissionsAtTime;
+        // uint256 reputationAtSubmission;
+        // uint256 totalSubmissionsAtTime;
+        // uint256 acceptedSubmissionsAtTime;
     }
     
     struct Evidence {
@@ -32,14 +32,17 @@ contract CitizenJusticePlatform {
         uint256 eventId;
         string metadata;        // Additional evidence metadata (JSON string)
         bool isDisputed;
-        mapping(uint256 => ValidationStatus) categoryValidations; // Validation status per category
-    }
-    
-    struct ValidationStatus {
-        uint256 votesFor;
+                uint256 votesFor;
         uint256 votesAgainst;
         mapping(address => bool) hasValidated;
+        // mapping(uint256 => ValidationStatus) categoryValidations; // Validation status per category
     }
+    
+    // struct ValidationStatus {
+    //     uint256 votesFor;
+    //     uint256 votesAgainst;
+    //     mapping(address => bool) hasValidated;
+    // }
     
     struct Category {
         string name;
@@ -47,8 +50,6 @@ contract CitizenJusticePlatform {
         address[] validators;
         bool isActive;
         uint256 totalEvidence;
-        uint256 minimumValidations;
-        mapping(address => bool) isValidator;
     }
     
     struct Event {
@@ -94,10 +95,10 @@ contract CitizenJusticePlatform {
         _;
     }
     
-    modifier onlyCategoryValidator(uint256 _categoryId) {
-        require(categories[_categoryId].isValidator[msg.sender], "Not category validator");
-        _;
-    }
+    // modifier onlyCategoryValidator(uint256 _categoryId) {
+    //     require(categories[_categoryId].isValidator[msg.sender], "Not category validator");
+    //     _;
+    // }
     
     modifier validCategories(uint256[] memory _categoryIds) {
         for (uint256 i = 0; i < _categoryIds.length; i++) {
@@ -125,10 +126,9 @@ contract CitizenJusticePlatform {
     // Category Management Functions
     function createCategory(
         string memory _name,
-        string memory _description,
-        uint256 _minimumValidations
+        string memory _description
     ) external {
-        require(_minimumValidations > 0, "Invalid minimum validations");
+        // require(_minimumValidations > 0, "Invalid minimum validations");
         
         uint256 newCategoryId = categoryCount++;
         Category storage newCategory = categories[newCategoryId];
@@ -136,8 +136,6 @@ contract CitizenJusticePlatform {
         newCategory.name = _name;
         newCategory.description = _description;
         newCategory.isActive = true;
-        newCategory.minimumValidations = _minimumValidations;
-        newCategory.isValidator[msg.sender] = true;
         newCategory.validators.push(msg.sender);
         
         emit CategoryCreated(newCategoryId, _name);
@@ -165,10 +163,10 @@ contract CitizenJusticePlatform {
         User storage submitter = users[msg.sender];
         newEvidence.submitterInfo = SubmitterInfo({
             userAddress: msg.sender,
-            identityHash: submitter.identityHash,
-            reputationAtSubmission: submitter.reputationPoints,
-            totalSubmissionsAtTime: submitter.totalSubmissions,
-            acceptedSubmissionsAtTime: submitter.acceptedSubmissions
+            identityHash: submitter.identityHash
+            // reputationAtSubmission: submitter.reputationPoints,
+            // totalSubmissionsAtTime: submitter.totalSubmissions,
+            // acceptedSubmissionsAtTime: submitter.acceptedSubmissions
         });
         
         newEvidence.timestamp = block.timestamp;
@@ -228,11 +226,11 @@ contract CitizenJusticePlatform {
         uint256 _evidenceId,
         uint256 _categoryId,
         bool _isValid
-    ) external onlyCategoryValidator(_categoryId) {
+    ) external {
         Evidence storage evidence = evidenceRegistry[_evidenceId];
-        ValidationStatus storage validation = evidence.categoryValidations[_categoryId];
+        // ValidationStatus storage validation = evidence.categoryValidations[_categoryId];
         
-        require(!validation.hasValidated[msg.sender], "Already validated");
+        require(!evidence.hasValidated[msg.sender], "Already validated");
         
         // Verify category is associated with this evidence
         bool categoryFound = false;
@@ -244,22 +242,22 @@ contract CitizenJusticePlatform {
         }
         require(categoryFound, "Category not associated with evidence");
         
-        validation.hasValidated[msg.sender] = true;
+        evidence.hasValidated[msg.sender] = true;
         
         if (_isValid) {
-            validation.votesFor++;
+            evidence.votesFor++;
         } else {
-            validation.votesAgainst++;
+            evidence.votesAgainst++;
         }
         
-        uint256 totalVotes = validation.votesFor + validation.votesAgainst;
-        if (totalVotes >= categories[_categoryId].minimumValidations) {
+        uint256 totalVotes = evidence.votesFor + evidence.votesAgainst;
+        if (totalVotes >= 5) {
           
             
             address submitterAddress = evidence.submitterInfo.userAddress;
             
             // If majority validates it as true
-            if (validation.votesFor > validation.votesAgainst) {
+            if (evidence.votesFor > evidence.votesAgainst) {
                 users[submitterAddress].reputationPoints += SUBMISSION_REWARD;
                 users[submitterAddress].acceptedSubmissions++;
             } else {
