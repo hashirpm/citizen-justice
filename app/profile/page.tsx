@@ -64,6 +64,7 @@ export default function Profile() {
         async function fetchData() {
             console.log(session)
             let userData = await getUserDetails(session?.user?.name)
+            console.log({ userData })
             setUser(userData)
         }
 
@@ -79,7 +80,7 @@ export default function Profile() {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <span>Profile</span>
-                        {user?.isVerified && (
+                        {mockuser.isVerified && (
                             <CheckCircle className="h-5 w-5 text-primary" />
                         )}
                     </CardTitle>
@@ -88,19 +89,19 @@ export default function Profile() {
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">ID</span>
-                            <span>{user?.id.toString().slice(0, 6)}...</span>
+                            <span>{mockuser.id.toString().slice(0, 6)}...</span>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Reputation</span>
                             <Badge variant="secondary" className="flex items-center gap-1">
                                 <Award className="h-4 w-4" />
-                                {user?.reputationPoints.toString()}
+                                {mockuser.reputationPoints.toString()}
                             </Badge>
                         </div>
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Success Rate</span>
                             <span>
-                                {(Number(user?.acceptedSubmissions) / Number(user?.totalSubmissions) * 100).toFixed(0)}%
+                                {(Number(mockuser.acceptedSubmissions) / Number(mockuser.totalSubmissions) * 100).toFixed(0)}%
                             </span>
                         </div>
                     </div>
@@ -123,7 +124,7 @@ export default function Profile() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {user?.createdEvents.map((event) => (
+                            {mockuser.createdEvents.map((event) => (
                                 <TableRow key={event.id}>
                                     <TableCell>{event.description}</TableCell>
                                     <TableCell>
@@ -146,7 +147,7 @@ export default function Profile() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {user?.evidences.map((evidence) => (
+                            {mockuser.evidences.map((evidence) => (
                                 <TableRow key={evidence.id}>
                                     <TableCell>{evidence.id}</TableCell>
                                     <TableCell>
@@ -162,7 +163,7 @@ export default function Profile() {
 
                 {/* <TabsContent value="categories">
                     <div className="space-y-2">
-                        {user?.categories.map((category) => (
+                        {mockuser.categories.map((category) => (
                             <div
                                 key={category.id}
                                 className="flex items-center gap-2 p-3 rounded-lg border"
