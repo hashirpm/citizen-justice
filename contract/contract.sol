@@ -9,6 +9,7 @@ contract CitizenJusticePlatform {
     // Structs
     struct User {
         bool isVerified;
+        string attestationId;
         uint256 reputationPoints;
         uint256 totalSubmissions;
         uint256 acceptedSubmissions;
@@ -78,7 +79,8 @@ contract CitizenJusticePlatform {
     uint256 public constant FALSE_EVIDENCE_PENALTY = 50;
     
     // Events
-    event UserVerified(address indexed user, string identityHash);
+    event UserCreated(address indexed user, string identityHash);
+    event UserVerified(address indexed user, string identityHash,string attestationId);
     event EvidenceSubmitted(uint256 indexed evidenceId,uint256 eventId, address indexed submitter,string evidenceHash,string geoLocation,string metadata);
     event CategoryAdded(uint256 indexed eventId, uint256 indexed categoryId);
     event EvidenceValidated(uint256 indexed evidenceId, uint256 indexed categoryId, bool isValid, address validator);
@@ -113,21 +115,23 @@ contract CitizenJusticePlatform {
         
         users[msg.sender] = User({
             isVerified: false,
+            attestationId:"0x00",
             reputationPoints: MINIMUM_REPUTATION,
             totalSubmissions: 0,
             acceptedSubmissions: 0,
             identityHash: _identityHash
         });
         
-        emit UserVerified(msg.sender,_identityHash);
+        emit UserCreated(msg.sender,_identityHash);
     }
-    function verifyUser(string memory _identityHash) external {
+    function verifyUser(string memory _identityHash,string memory attestationId) external {
         require(!users[msg.sender].isVerified, "User already verified");
         
         users[msg.sender].
             isVerified= true;
+            attestationId=attestationId;
             
-        emit UserVerified(msg.sender,_identityHash);
+        emit UserVerified(msg.sender,_identityHash,attestationId);
     }
 
     // Category Management Functions
@@ -152,14 +156,15 @@ contract CitizenJusticePlatform {
     function submitEvidence(
         string memory _evidenceHash,
         string memory _geoLocation,
-        uint256[] memory _categoryIds,
+        // uint256[] memory _categoryIds,
         uint256 _eventId,
         string memory _metadata
-    ) external onlyVerifiedUser validCategories(_categoryIds) {
-        require(_categoryIds.length > 0, "At least one category required");
+    ) external onlyVerifiedUser {
+
+        // require(_categoryIds.length > 0, "At least one category required");
         
         if (_eventId != 0) {
-            require(_eventId < eventCount, "Invalid event ID");
+            require(_eventId <= eventCount, "Invalid event ID");
             require(events[_eventId].isActive, "Event not active");
         }
         
@@ -179,31 +184,31 @@ contract CitizenJusticePlatform {
         newEvidence.timestamp = block.timestamp;
         newEvidence.evidenceHash = _evidenceHash;
         newEvidence.geoLocation = _geoLocation;
-        newEvidence.categoryIds = _categoryIds;
+        newEvidence.categoryIds = [0];
         newEvidence.eventId = _eventId;
         newEvidence.metadata = _metadata;
         newEvidence.isDisputed = false;
         
         // Initialize validation status for each category
-        for (uint256 i = 0; i < _categoryIds.length; i++) {
-            categories[_categoryIds[i]].totalEvidence++;
+        for (uint256 i = 0; i < newEvidence.categoryIds.length; i++) {
+            categories[newEvidence.categoryIds[i]].totalEvidence++;
         }
         
         users[msg.sender].totalSubmissions++;
            
         emit EvidenceSubmitted(evidenceCount,_eventId, msg.sender,_evidenceHash,_geoLocation,_metadata);
-        for (uint256 i = 0; i < _categoryIds.length; i++) {
-            emit CategoryAdded(_eventId, _categoryIds[i]);
+        for (uint256 i = 0; i < newEvidence.categoryIds.length; i++) {
+            emit CategoryAdded(_eventId, newEvidence.categoryIds[i]);
         }
     }
     function createEvent(
         string memory _description,
-        string memory _location,
-        uint256[] memory _categoryIds
-    ) external onlyVerifiedUser validCategories(_categoryIds) {
+        string memory _location
+        // uint256[] memory _categoryIds
+    ) external onlyVerifiedUser  {
         require(bytes(_description).length > 0, "Description cannot be empty");
         require(bytes(_location).length > 0, "Location cannot be empty");
-        require(_categoryIds.length > 0, "At least one category required");
+        // require(_categoryIds.length > 0, "At least one category required");
         eventCount++;
 
        
@@ -214,8 +219,8 @@ contract CitizenJusticePlatform {
         newEvent.location = _location;
         newEvent.isActive = true;
         newEvent.creator = msg.sender;
-        newEvent.categoryIds = _categoryIds;
-        emit EventCreated(eventCount, _description,_location,msg.sender,_categoryIds);
+        newEvent.categoryIds = [0];
+        emit EventCreated(eventCount, _description,_location,msg.sender,newEvent.categoryIds);
     }
     
     // Function to deactivate an event
