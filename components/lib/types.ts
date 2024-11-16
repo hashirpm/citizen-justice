@@ -4,6 +4,7 @@ export type User = {
     isVerified: boolean
     reputationPoints: string
     totalSubmissions: string
+    attestationId: string | null
     txHash: string
     createdEvents: Event[]
     evidences: Evidence[]
