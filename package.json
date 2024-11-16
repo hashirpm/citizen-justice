@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ethsign/sp-sdk": "^0.7.7",
-    "@worldcoin/minikit-js": "0.0.27-internal-alpha",
+    "@worldcoin/minikit-js": "1.2.0",
     "eruda": "^3.2.3",
     "next": "14.2.6",
     "next-auth": "^4.24.7",
