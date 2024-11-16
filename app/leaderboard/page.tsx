@@ -12,7 +12,9 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getUsersByReputation } from "@/components/lib/graph";
+import { User } from "@/components/lib/types";
 
 // Mock data - replace with actual data fetching
 const mockUsers = [
@@ -30,11 +32,18 @@ export default function Leaderboard() {
 
     const { data: session } = useSession();
     const router = useRouter();
+    const [leaderboardData, setLeaderboardData] = useState<User[]>([])
 
     useEffect(() => {
         if (!session) {
             router.push("/login");
         }
+
+        async function fetchData() {
+            let leaderboardData = await getUsersByReputation()
+            setLeaderboardData(leaderboardData)
+        }
+        fetchData()
     }, [])
 
     return (
@@ -51,7 +60,7 @@ export default function Leaderboard() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {mockUsers.map((user) => (
+                        {leaderboardData.map((user) => (
                             <TableRow key={user.id.toString()}>
                                 <TableCell className="flex items-center gap-2">
                                     {user.id.toString().slice(0, 6)}...
