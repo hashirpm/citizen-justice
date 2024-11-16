@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { validateEvidence, verifyUser } from "@/components/lib/contract-txns";
 import { getAllActiveEvents } from "@/components/lib/graph";
 import { Event } from "@/components/lib/types";
+import WelcomeDialog from "@/components/WelcomeDialog";
 
 // Mock data - replace with actual data fetching
 const mockEvents = [
@@ -52,6 +53,7 @@ export default function Home() {
 
   return (
     <div className="container max-w-md mx-auto p-4">
+      <WelcomeDialog />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Events</h1>
         <Link href="/create-event">
