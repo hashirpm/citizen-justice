@@ -165,10 +165,6 @@ export default function EventCard({ event }: { event: Event }) {
     // Get the latest stored image
     const latestStoreId = storeIds[0];
     console.log({ latestStoreId });
-    toast({
-      title: "Retrieving Evidence from Nillion...",
-      variant: "default", // Optional, customize as per your toast setup
-    });
     const retrievedImage = await fetch(
       `${API_BASE}/api/secret/retrieve/${latestStoreId.store_id}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=${latestStoreId.secret_name}`
     ).then((res) => res.json());
@@ -277,6 +273,7 @@ export default function EventCard({ event }: { event: Event }) {
           </Button>
         </div>
       </DialogContent> */}
+      {!isSuccess &&
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{event.description}</DialogTitle>
@@ -317,6 +314,7 @@ export default function EventCard({ event }: { event: Event }) {
           </Button>
         </div>
       </DialogContent>
+}
     </Dialog>
   );
 }
