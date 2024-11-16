@@ -149,6 +149,7 @@ export default function EventCard({ event }: { event: Event }) {
         variant: "default", // Optional, customize as per your toast setup
       });
       console.error(error);
+      setIsUploading(false);
     }
   };
   const handleViewImage = async () => {
@@ -303,16 +304,14 @@ export default function EventCard({ event }: { event: Event }) {
             {isFetching ? (
               <>
                 <Loader className="h-4 w-4 mr-2 animate-spin" />
-                Uploading...
+                Fetching...
               </>
             ) : (
               <>
-                <Upload className="h-4 w-4 mr-2" />
-                Upload Evidence
+                <Image className="h-4 w-4 mr-2" />
+                Show Evidences
               </>
             )}
-            <Image className="h-4 w-4 mr-2" />
-            Show Evidences
           </Button>
         </div>
       </DialogContent>
