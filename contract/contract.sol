@@ -66,14 +66,13 @@ contract CitizenJusticePlatform {
     mapping(uint256 => Evidence) public evidenceRegistry;
     mapping(uint256 => Category) public categories;
     mapping(uint256 => Event) public events;
-    mapping(uint256 => mapping(address => bool)) public hasVoted;
     
     uint256 public evidenceCount;
     uint256 public categoryCount;
     uint256 public eventCount;
     
     // Constants
-    uint256 public constant MINIMUM_REPUTATION = 100;
+    uint256 public constant MINIMUM_REPUTATION = 0;
     uint256 public constant SUBMISSION_REWARD = 10;
     uint256 public constant VALIDATION_REWARD = 5;
     uint256 public constant FALSE_EVIDENCE_PENALTY = 50;
@@ -109,17 +108,25 @@ contract CitizenJusticePlatform {
     }
 
     // User Management Functions
-    function verifyUser(string memory _identityHash) external {
+    function createUser(string memory _identityHash) external {
         require(!users[msg.sender].isVerified, "User already verified");
         
         users[msg.sender] = User({
-            isVerified: true,
+            isVerified: false,
             reputationPoints: MINIMUM_REPUTATION,
             totalSubmissions: 0,
             acceptedSubmissions: 0,
             identityHash: _identityHash
         });
         
+        emit UserVerified(msg.sender,_identityHash);
+    }
+    function verifyUser(string memory _identityHash) external {
+        require(!users[msg.sender].isVerified, "User already verified");
+        
+        users[msg.sender].
+            isVerified= true;
+            
         emit UserVerified(msg.sender,_identityHash);
     }
 
@@ -156,7 +163,7 @@ contract CitizenJusticePlatform {
             require(events[_eventId].isActive, "Event not active");
         }
         
-        evidenceCount++;
+       
         Evidence storage newEvidence = evidenceRegistry[evidenceCount];
         
         // Create SubmitterInfo with current user data
@@ -183,7 +190,7 @@ contract CitizenJusticePlatform {
         }
         
         users[msg.sender].totalSubmissions++;
-        
+           evidenceCount++;
         emit EvidenceSubmitted(evidenceCount,_eventId, msg.sender,_evidenceHash,_geoLocation,_metadata);
         for (uint256 i = 0; i < _categoryIds.length; i++) {
             emit CategoryAdded(_eventId, _categoryIds[i]);
@@ -198,7 +205,7 @@ contract CitizenJusticePlatform {
         require(bytes(_location).length > 0, "Location cannot be empty");
         require(_categoryIds.length > 0, "At least one category required");
         
-        eventCount++;
+       
         Event storage newEvent = events[eventCount];
         
         newEvent.description = _description;
@@ -207,19 +214,19 @@ contract CitizenJusticePlatform {
         newEvent.isActive = true;
         newEvent.creator = msg.sender;
         newEvent.categoryIds = _categoryIds;
-        
+         eventCount++;
         emit EventCreated(eventCount, _description,_location,msg.sender,_categoryIds);
     }
     
     // Function to deactivate an event
-    function deactivateEvent(uint256 _eventId) external {
-        require(_eventId > 0 && _eventId <= eventCount, "Invalid event ID");
-        require(events[_eventId].creator == msg.sender, "Only creator can deactivate");
-        require(events[_eventId].isActive, "Event already inactive");
+    // function deactivateEvent(uint256 _eventId) external {
+    //     require(_eventId > 0 && _eventId <= eventCount, "Invalid event ID");
+    //     require(events[_eventId].creator == msg.sender, "Only creator can deactivate");
+    //     require(events[_eventId].isActive, "Event already inactive");
         
-        events[_eventId].isActive = false;
-        emit EventDeactivated(_eventId);
-    }
+    //     events[_eventId].isActive = false;
+    //     emit EventDeactivated(_eventId);
+    // }
 
     // Validation Functions
     function validateEvidence(
@@ -250,9 +257,8 @@ contract CitizenJusticePlatform {
             evidence.votesAgainst++;
         }
         
-        uint256 totalVotes = evidence.votesFor + evidence.votesAgainst;
-        if (totalVotes >= 5) {
-          
+      
+      
             
             address submitterAddress = evidence.submitterInfo.userAddress;
             
@@ -270,7 +276,7 @@ contract CitizenJusticePlatform {
                     users[submitterAddress].reputationPoints = 0;
                 }
             }
-        }
+        
         
         // Reward validator
         users[msg.sender].reputationPoints += VALIDATION_REWARD;
