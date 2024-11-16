@@ -32,7 +32,7 @@ contract CitizenJusticePlatform {
         uint256 eventId;
         string metadata;        // Additional evidence metadata (JSON string)
         bool isDisputed;
-                uint256 votesFor;
+        uint256 votesFor;
         uint256 votesAgainst;
         mapping(address => bool) hasValidated;
         // mapping(uint256 => ValidationStatus) categoryValidations; // Validation status per category
@@ -80,14 +80,14 @@ contract CitizenJusticePlatform {
     
     // Events
     event UserVerified(address indexed user, string identityHash);
-    event EvidenceSubmitted(uint256 indexed evidenceId, address indexed submitter);
-    event CategoryAdded(uint256 indexed evidenceId, uint256 indexed categoryId);
+    event EvidenceSubmitted(uint256 indexed evidenceId,uint256 eventId, address indexed submitter,string evidenceHash,string geoLocation,string metadata);
+    event CategoryAdded(uint256 indexed eventId, uint256 indexed categoryId);
     event EvidenceValidated(uint256 indexed evidenceId, uint256 indexed categoryId, bool isValid, address validator);
-    event CategoryCreated(uint256 indexed categoryId, string name);
+    event CategoryCreated(uint256 indexed categoryId, string name,string description);
     event EventCreated(uint256 indexed eventId, string description,string location,address creator,uint256[] categoryIds);
     event EventDeactivated(uint256 indexed eventId);
-    event DisputeInitiated(uint256 indexed evidenceId);
-    event ValidatorAdded(uint256 indexed categoryId, address indexed validator);
+    event ReputationRewarded(address user,uint256 points);
+    event ReputationPenalty(address user,uint256 points);
 
     // Modifiers
     modifier onlyVerifiedUser() {
@@ -138,7 +138,7 @@ contract CitizenJusticePlatform {
         newCategory.isActive = true;
         newCategory.validators.push(msg.sender);
         
-        emit CategoryCreated(newCategoryId, _name);
+        emit CategoryCreated(newCategoryId, _name,_description);
     }
 
     // Evidence Submission Functions
@@ -184,9 +184,9 @@ contract CitizenJusticePlatform {
         
         users[msg.sender].totalSubmissions++;
         
-        emit EvidenceSubmitted(evidenceCount, msg.sender);
+        emit EvidenceSubmitted(evidenceCount,_eventId, msg.sender,_evidenceHash,_geoLocation,_metadata);
         for (uint256 i = 0; i < _categoryIds.length; i++) {
-            emit CategoryAdded(evidenceCount, _categoryIds[i]);
+            emit CategoryAdded(_eventId, _categoryIds[i]);
         }
     }
     function createEvent(
@@ -260,10 +260,12 @@ contract CitizenJusticePlatform {
             if (evidence.votesFor > evidence.votesAgainst) {
                 users[submitterAddress].reputationPoints += SUBMISSION_REWARD;
                 users[submitterAddress].acceptedSubmissions++;
+                emit ReputationRewarded(submitterAddress,SUBMISSION_REWARD);
             } else {
                 // Penalty for false evidence
                 if (users[submitterAddress].reputationPoints >= FALSE_EVIDENCE_PENALTY) {
                     users[submitterAddress].reputationPoints -= FALSE_EVIDENCE_PENALTY;
+                    emit ReputationPenalty(submitterAddress,FALSE_EVIDENCE_PENALTY);
                 } else {
                     users[submitterAddress].reputationPoints = 0;
                 }
