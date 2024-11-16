@@ -1,34 +1,63 @@
-"use client";
+"use client"
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Globe } from "lucide-react";
+import { Plus } from "lucide-react";
+import EventCard from "@/components/EventCard";
+import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { SignIn } from "@/components/SignIn";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function Login() {
+// Mock data - replace with actual data fetching
+const mockEvents = [
+  {
+    id: "1",
+    description: "Suspicious activity in downtown area",
+    location: "Main Street, Downtown",
+    timestamp: BigInt(Date.now()),
+    isActive: true,
+    creator: {
+      id: "0x123",
+      isVerified: true,
+      reputationPoints: BigInt(100),
+      acceptedSubmissions: BigInt(5),
+      totalSubmissions: BigInt(8),
+    },
+  },
+  // Add more mock events as needed
+];
+
+export default function Home() {
+
+  const { data: session } = useSession();
   const router = useRouter();
 
-  const handleLogin = () => {
-    // Implement World ID login logic here
-    router.push("/home");
-  };
+  useEffect(() => {
+    if (!session) {
+      router.push("/login");
+    }
+  }, [])
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button
-            onClick={handleLogin}
-            className="w-full flex items-center justify-center gap-2 text-lg h-12"
-          >
-            <Globe className="h-5 w-5" />
-            Login with World ID
+    <div className="container max-w-md mx-auto p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Events</h1>
+        <Link href="/create-event">
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Create Event
           </Button>
-        </CardContent>
-      </Card>
+        </Link>
+      </div>
+
+      <SignIn />
+
+      <div className="space-y-4">
+        {mockEvents.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </div>
     </div>
   );
 }

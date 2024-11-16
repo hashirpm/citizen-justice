@@ -29,6 +29,8 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 const categories = [
     { id: "1", name: "Security" },
@@ -61,6 +63,14 @@ export default function CreateEvent() {
         console.log(data);
         router.push("/");
     };
+
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        if (!session) {
+            router.push("/login");
+        }
+    }, [])
 
     return (
         <div className="container max-w-md mx-auto p-4">

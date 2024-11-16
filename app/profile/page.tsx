@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Award, FileText } from "lucide-react";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Mock data - replace with actual data fetching
 const mockUser = {
@@ -46,6 +49,16 @@ const mockUser = {
 };
 
 export default function Profile() {
+
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!session) {
+            router.push("/login");
+        }
+    }, [])
+
     return (
         <div className="container max-w-md mx-auto p-4">
             <Card className="mb-6">

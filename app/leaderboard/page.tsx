@@ -8,6 +8,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 // Mock data - replace with actual data fetching
 const mockUsers = [
@@ -22,6 +25,16 @@ const mockUsers = [
 ];
 
 export default function Leaderboard() {
+
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!session) {
+            router.push("/login");
+        }
+    }, [])
+
     return (
         <div className="container max-w-md mx-auto p-4">
             <h1 className="text-2xl font-bold mb-6">Leaderboard</h1>

@@ -9,10 +9,10 @@ export default function Navbar() {
     const pathname = usePathname();
 
     // Don't render navbar on login page
-    if (pathname === '/') return null;
+    if (pathname === '/login') return null;
 
     const navItems = [
-        { href: "/home", icon: Home, label: "Home" },
+        { href: "/", icon: Home, label: "Home" },
         { href: "/leaderboard", icon: Trophy, label: "Leaderboard" },
         { href: "/profile", icon: UserCircle, label: "Profile" },
     ];
