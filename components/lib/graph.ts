@@ -1,16 +1,19 @@
-import axios from 'axios';
-import { GRAPH_QUERY_URL } from './const';
-import { Event, User } from './types';
+import axios from "axios";
+import { GRAPH_QUERY_URL } from "./const";
+import { Event, User } from "./types";
 
-export const getUserDetails = async (identityHash: string | undefined | null) => {
-    console.log('identityHash: ', identityHash);
-    const response = await axios.post(GRAPH_QUERY_URL, {
-        query: `
+export const getUserDetails = async (
+  identityHash: string | undefined | null
+) => {
+  console.log("identityHash: ", identityHash);
+  const response = await axios.post(GRAPH_QUERY_URL, {
+    query: `
             query getUser($id: String!) {
                 users(where: {identityHash: $id}) {
                     acceptedSubmissions
                     id
                     identityHash
+                    attestaionId
                     isVerified
                     reputationPoints
                     totalSubmissions
@@ -34,19 +37,17 @@ export const getUserDetails = async (identityHash: string | undefined | null) =>
                 }
             }
             `,
-        variables: {
-            id: identityHash?.toLowerCase(),
-        },
-
-    });
-    console.log('response :', response);
-    return response.data.data;
-}
-
+    variables: {
+      id: identityHash?.toLowerCase(),
+    },
+  });
+  console.log("response :", response);
+  return response.data.data;
+};
 
 export const getUsersByReputation = async (): Promise<User[]> => {
-    const response = await axios.post(GRAPH_QUERY_URL, {
-        query: `
+  const response = await axios.post(GRAPH_QUERY_URL, {
+    query: `
             query {
                 users(orderBy: reputationPoints, orderDirection: desc) {
                     id
@@ -58,13 +59,13 @@ export const getUsersByReputation = async (): Promise<User[]> => {
                 }
             }
             `,
-    });
-    return response.data.data.users;
-}
+  });
+  return response.data.data.users;
+};
 
 export const getAllActiveEvents = async (): Promise<Event[]> => {
-    const response = await axios.post(GRAPH_QUERY_URL, {
-        query: `
+  const response = await axios.post(GRAPH_QUERY_URL, {
+    query: `
             query {
                 events{
                         id
@@ -82,6 +83,6 @@ export const getAllActiveEvents = async (): Promise<Event[]> => {
                 }
             }
             `,
-    });
-    return response.data.data.events;
-}
+  });
+  return response.data.data.events;
+};

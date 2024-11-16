@@ -93,6 +93,7 @@ export default function Profile() {
   }, [session?.user]);
 
   const handleVerify = async () => {
+    console.log(user?.attestationId)
     try {
       if (user?.attestationId) {
         const result = await indexService.queryAttestation(user?.attestationId);
