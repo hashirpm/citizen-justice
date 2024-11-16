@@ -28,6 +28,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { createCategory, createEvent } from "@/components/lib/contract-txns";
 import { toast } from "@/components/hooks/use-toasts";
+import { sendEventCreatedNotification } from "@/lib/push";
 
 const categories = [{ id: "0", name: "Security" }];
 
@@ -62,6 +63,7 @@ export default function CreateEvent() {
         [Number(data.category)]
       );
       if (finalPayload.status == "success") {
+        await sendEventCreatedNotification(data.description)
         setIsSuccess(true);
         setTxHash(finalPayload.transaction_id);
         // await createCategory(data.description, data.description);
