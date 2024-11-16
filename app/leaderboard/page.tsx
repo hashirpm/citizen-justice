@@ -41,6 +41,7 @@ export default function Leaderboard() {
 
         async function fetchData() {
             let leaderboardData = await getUsersByReputation()
+            console.log('leaderboardData :', leaderboardData);
             setLeaderboardData(leaderboardData)
         }
         fetchData()

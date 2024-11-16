@@ -58,5 +58,5 @@ export const getUsersByReputation = async (): Promise<User[]> => {
             }
             `,
     });
-    return response.data.data.users;
+    return response.data.data;
 }
