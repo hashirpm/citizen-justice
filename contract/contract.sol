@@ -59,6 +59,8 @@ contract CitizenJusticePlatform {
         string location;
         bool isActive;
         address creator;
+        string availTxHash;
+        string availBlockHash;
         uint256[] categoryIds;  // Multiple categories per event
     }
 
@@ -86,7 +88,7 @@ contract CitizenJusticePlatform {
     event EvidenceValidated(uint256 indexed evidenceId, uint256 indexed categoryId, bool isValid, address validator);
     event CategoryCreated(uint256 indexed categoryId,address validator, string name,string description);
     event EventCreated(uint256 indexed eventId, string description,string location,address creator,uint256[] categoryIds);
-    event EventDeactivated(uint256 indexed eventId);
+    event EventDeactivated(uint256 indexed eventId,string availTxHash,string availBlockHash);
     event ReputationRewarded(address user,uint256 points);
     event ReputationPenalty(address user,uint256 points);
 
@@ -220,18 +222,18 @@ contract CitizenJusticePlatform {
         newEvent.isActive = true;
         newEvent.creator = msg.sender;
         newEvent.categoryIds = [0];
+        newEvent.availBlockHash='';
+        newEvent.availTxHash='';
         emit EventCreated(eventCount, _description,_location,msg.sender,newEvent.categoryIds);
     }
     
     // Function to deactivate an event
-    // function deactivateEvent(uint256 _eventId) external {
-    //     require(_eventId > 0 && _eventId <= eventCount, "Invalid event ID");
-    //     require(events[_eventId].creator == msg.sender, "Only creator can deactivate");
-    //     require(events[_eventId].isActive, "Event already inactive");
-        
-    //     events[_eventId].isActive = false;
-    //     emit EventDeactivated(_eventId);
-    // }
+    function deactivateEvent(uint256 _eventId,string memory availTxHash, string memory availBlockHash) external {
+        events[_eventId].isActive = false;
+         events[_eventId].availTxHash=availTxHash;
+         events[_eventId].availBlockHash=availBlockHash;
+        emit EventDeactivated(_eventId,availTxHash,availBlockHash);
+    }
 
     // Validation Functions
     function validateEvidence(
