@@ -26,8 +26,9 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { createEvent } from "@/components/lib/contract-txns";
+import { createCategory, createEvent } from "@/components/lib/contract-txns";
 import { toast } from "@/components/hooks/use-toasts";
+import { ethers } from "ethers";
 
 const categories = [
     { id: "1", name: "Security" },
@@ -55,13 +56,15 @@ export default function CreateEvent() {
         },
     });
 
+
     const onSubmit = async (data: FormValues) => {
         // Implement event creation logic here
         try {
             console.log(data);
             await createEvent(data.description, data.location, [
-                Number(data.category),
+                Number(data.category)
             ]);
+            // await createCategory(data.description, data.description);
             toast({
                 title: "Event Created",
                 description: "Your event has been successfully created.",

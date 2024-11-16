@@ -8,6 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 import { SignIn } from "@/components/SignIn";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { validateEvidence, verifyUser } from "@/components/lib/contract-txns";
 
 // Mock data - replace with actual data fetching
 const mockEvents = [
@@ -43,7 +44,7 @@ export default function Home() {
   return (
     <div className="container max-w-md mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Events</h1>
+        <h1 className="text-2xl font-bold" onClick={() => validateEvidence(1, 1, true)}>Events - {session?.user?.name}</h1>
         <Link href="/create-event">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
@@ -52,7 +53,7 @@ export default function Home() {
         </Link>
       </div>
 
-      <SignIn />
+      {/* <SignIn /> */}
 
       <div className="space-y-4">
         {mockEvents.map((event) => (
