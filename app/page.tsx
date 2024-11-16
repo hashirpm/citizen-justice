@@ -1,69 +1,42 @@
-// import Navbar from "@/components/Navbar/navbar";
-// import { PayBlock } from "@/components/Pay";
-// import { SignIn } from "@/components/SignIn";
-// import { VerifyBlock } from "@/components/Verify";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import EventCard from "@/components/EventCard";
 
-// export default function Home() {
-//   return (
-//     <main className="flex flex-col bg-white w-full h-screen">
-//       <div className="h-[95vh]">
-//         <h1 className="text-2xl text-black font-bold p-4">Events</h1>
-//       </div>
-//       <div className="h-[5vh]">
-//         <Navbar />
-//       </div>
-//     </main>
-//   );
-// }
+// Mock data - replace with actual data fetching
+const mockEvents = [
+  {
+    id: "1",
+    description: "Suspicious activity in downtown area",
+    location: "Main Street, Downtown",
+    timestamp: BigInt(Date.now()),
+    isActive: true,
+    creator: {
+      id: "0x123",
+      isVerified: true,
+      reputationPoints: BigInt(100),
+      acceptedSubmissions: BigInt(5),
+      totalSubmissions: BigInt(8),
+    },
+  },
+  // Add more mock events as needed
+];
 
-"use client";
-import { PayBlock } from "@/components/Pay";
-import { SignIn } from "@/components/SignIn";
-import { VerifyBlock } from "@/components/Verify";
-import {
-  SignProtocolClient,
-  SpMode,
-  EvmChains,
-  IndexService,
-  decodeOnChainData,
-  DataLocationOnChain,
-} from "@ethsign/sp-sdk";
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 gap-y-3">
-      <SignIn />
-      <VerifyBlock />
-      <PayBlock />
-      <button
-        onClick={async () => {
-          const client = new SignProtocolClient(SpMode.OnChain, {
-            chain: EvmChains.sepolia,
-          });
+    <div className="container max-w-md mx-auto p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Events</h1>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Event
+        </Button>
+      </div>
 
-          const attestationData = {
-            businessName: "ABCD",
-            transactionHash:
-              "0x3e7b295215e5a7bf07b1d1ba3bf911917f52c88cfe04c204f9f5f6365b39cf99",
-            invoiceDate: "1731369600",
-            customer: "0x0AE6573813a73221d50bB32e4B4799c9AE7ec682",
-            productName: "ABF-CD",
-            category: "ugbuibo",
-            quantity: "9",
-            amount: "0",
-            network: "sepolia",
-          };
-
-          const res = await client.createAttestation({
-            schemaId: "0x268", // Replace with your actual schema ID
-            data: attestationData,
-            indexingValue: attestationData.customer, // Using customer address as indexing value
-          });
-
-          console.log(JSON.stringify(res));
-        }}
-      >
-        Attest
-      </button>
-    </main>
+      <div className="space-y-4">
+        {mockEvents.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </div>
+    </div>
   );
 }

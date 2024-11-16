@@ -3,6 +3,7 @@ import ABI from '../../contract/ABI.json'
 import { CONTRACT_ADDRESS } from "./const"
 
 export const verifyUser = async (identityHash: string) => {
+    console.log('identityHash: ', identityHash)
     const { commandPayload, finalPayload } = await MiniKit.commandsAsync.sendTransaction({
         transaction: [
             {
@@ -13,6 +14,9 @@ export const verifyUser = async (identityHash: string) => {
             },
         ],
     })
+    console.log('commandPayload', commandPayload)
+    console.log('finalPayload', finalPayload)
+    return { commandPayload, finalPayload }
 }
 
 export const createCategory = async (name: string, description: string) => {
@@ -26,6 +30,7 @@ export const createCategory = async (name: string, description: string) => {
             },
         ],
     })
+    return { commandPayload, finalPayload }
 }
 
 export const createEvent = async (description: string, location: string, categoryIds: number[]) => {
@@ -39,6 +44,7 @@ export const createEvent = async (description: string, location: string, categor
             },
         ],
     })
+    return { commandPayload, finalPayload }
 }
 
 export const deactivateEvent = async (eventId: number) => {
@@ -52,6 +58,7 @@ export const deactivateEvent = async (eventId: number) => {
             },
         ],
     })
+    return { commandPayload, finalPayload }
 }
 
 export const validateEvidence = async (evidenceId: number, categoryId: number, isValid: boolean) => {
@@ -65,6 +72,7 @@ export const validateEvidence = async (evidenceId: number, categoryId: number, i
             },
         ],
     })
+    return { commandPayload, finalPayload }
 }
 
 export const submitEvidence = async (evidenceHash: string, geoLocation: string, categoryIds: number[], eventId: number, metadata: string) => {
@@ -78,4 +86,5 @@ export const submitEvidence = async (evidenceHash: string, geoLocation: string, 
             },
         ],
     })
+    return { commandPayload, finalPayload }
 }
