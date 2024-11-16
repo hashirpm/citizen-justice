@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { GRAPH_QUERY_URL } from './const';
-import { User } from './types';
+import { Event, User } from './types';
 
 export const getUserDetails = async (identityHash: string | undefined | null) => {
     console.log('identityHash: ', identityHash);
@@ -60,4 +60,24 @@ export const getUsersByReputation = async (): Promise<User[]> => {
             `,
     });
     return response.data.data.users;
+}
+
+export const getAllActiveEvents = async (): Promise<Event[]> => {
+    const response = await axios.post(GRAPH_QUERY_URL, {
+        query: `
+            query {
+                events{
+                        id
+                        description
+                        location
+                        isActive
+                        txHash
+                        evidences{
+                        evidenceHash
+                    }
+                }
+            }
+            `,
+    });
+    return response.data.data.events;
 }

@@ -17,6 +17,7 @@ export type Event = {
     location: string
     timestamp: string
     txHash: string
+    categoryIds: Category[]
 }
 
 export type Evidence = {
@@ -26,4 +27,9 @@ export type Evidence = {
     id: string
     timestamp: string
     txHash: string
+}
+
+export type Category = {
+    id: string
+    name: string
 }

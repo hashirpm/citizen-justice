@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { SignIn } from "@/components/SignIn";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { validateEvidence, verifyUser } from "@/components/lib/contract-txns";
+import { getAllActiveEvents } from "@/components/lib/graph";
+import { Event } from "@/components/lib/types";
 
 // Mock data - replace with actual data fetching
 const mockEvents = [
@@ -34,11 +35,19 @@ export default function Home() {
 
   const { data: session } = useSession();
   const router = useRouter();
+  const [events, setEvents] = useState<Event[]>([])
 
   useEffect(() => {
     if (!session) {
       router.push("/login");
     }
+
+    async function fetchData() {
+      let events = await getAllActiveEvents()
+      setEvents(events)
+    }
+
+    fetchData()
   }, [])
 
   return (
@@ -56,7 +65,7 @@ export default function Home() {
       {/* <SignIn /> */}
 
       <div className="space-y-4">
-        {mockEvents.map((event) => (
+        {events.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
       </div>

@@ -30,21 +30,8 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Input } from "./ui/input";
 import { NILLION_APP_ID, NILLION_APP_BASE } from "./lib/const";
-type Event = {
-  id: string;
-  description: string;
-  location: string;
-  timestamp: bigint;
-  isActive: boolean;
-  categoryIds: number[];
-  creator: {
-    id: string;
-    isVerified: boolean;
-    reputationPoints: bigint;
-    acceptedSubmissions: bigint;
-    totalSubmissions: bigint;
-  };
-};
+import { Event } from "./lib/types";
+
 
 export default function EventCard({ event }: { event: Event }) {
   const { data: session } = useSession();
@@ -120,10 +107,11 @@ export default function EventCard({ event }: { event: Event }) {
       if (selectedFile) {
         const result = await uploadEvidence(selectedFile[0], event.id);
 
+        let categoryIds = event.categoryIds.map((id) => Number(id));
         const { commandPayload, finalPayload } = await submitEvidence(
           result.result.store_id,
           "w4rw063p",
-          event.categoryIds,
+          categoryIds,
           Number(event.id),
           "metadata"
         );
@@ -274,47 +262,47 @@ export default function EventCard({ event }: { event: Event }) {
         </div>
       </DialogContent> */}
       {!isSuccess &&
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{event.description}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
-          {/* <input type="file" onChange={handleFileChange} /> */}
-          <div className="upload-btn-wrapper mt-4 cursor-pointer">
-            <Button className="btn">
-              {selectedFile != null ? selectedFile[0].name : "Select Document"}
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{event.description}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* <input type="file" onChange={handleFileChange} /> */}
+            <div className="upload-btn-wrapper mt-4 cursor-pointer">
+              <Button className="btn">
+                {selectedFile != null ? selectedFile[0].name : "Select Document"}
+              </Button>
+              <Input
+                type="file"
+                name="myfile"
+                onChange={(e: any) => setSelectedFile(e.target.files)}
+              />
+            </div>
+            <Button
+              onClick={handleUpload}
+              className="w-full"
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <>
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Upload Evidence
+                </>
+              )}
             </Button>
-            <Input
-              type="file"
-              name="myfile"
-              onChange={(e: any) => setSelectedFile(e.target.files)}
-            />
+            {/* <p>{status}</p> */}
+            <Button variant="outline" className="w-full">
+              <Image className="h-4 w-4 mr-2" />
+              Show Evidences
+            </Button>
           </div>
-          <Button
-            onClick={handleUpload}
-            className="w-full"
-            disabled={isUploading}
-          >
-            {isUploading ? (
-              <>
-                <Loader className="h-4 w-4 mr-2 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              <>
-                <Upload className="h-4 w-4 mr-2" />
-                Upload Evidence
-              </>
-            )}
-          </Button>
-          {/* <p>{status}</p> */}
-          <Button variant="outline" className="w-full">
-            <Image className="h-4 w-4 mr-2" />
-            Show Evidences
-          </Button>
-        </div>
-      </DialogContent>
-}
+        </DialogContent>
+      }
     </Dialog>
   );
 }
