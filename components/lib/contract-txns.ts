@@ -38,12 +38,31 @@ export const createEvent = async (description: string, location: string, categor
         transaction: [
             {
                 address: CONTRACT_ADDRESS,
-                abi: ABI,
+                abi: [{
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_description",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_location",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "createEvent",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }],
                 functionName: 'createEvent',
-                args: [description, location, categoryIds],
+                args: [description, location],
             },
         ],
     })
+    console.log('commandPayload', commandPayload)
+    console.log('finalPayload', finalPayload)
     return { commandPayload, finalPayload }
 }
 
@@ -80,11 +99,40 @@ export const submitEvidence = async (evidenceHash: string, geoLocation: string, 
         transaction: [
             {
                 address: CONTRACT_ADDRESS,
-                abi: ABI,
+                abi: [{
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_evidenceHash",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_geoLocation",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "_eventId",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_metadata",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "submitEvidence",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }],
                 functionName: 'submitEvidence',
-                args: [evidenceHash, geoLocation, categoryIds, eventId, metadata],
+                args: [evidenceHash, geoLocation, eventId, metadata],
             },
         ],
     })
+    console.log('commandPayload', commandPayload)
+    console.log('finalPayload', finalPayload)
     return { commandPayload, finalPayload }
 }
