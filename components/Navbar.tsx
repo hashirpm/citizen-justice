@@ -8,8 +8,11 @@ import { cn } from "@/lib/utils";
 export default function Navbar() {
     const pathname = usePathname();
 
+    // Don't render navbar on login page
+    if (pathname === '/') return null;
+
     const navItems = [
-        { href: "/", icon: Home, label: "Home" },
+        { href: "/home", icon: Home, label: "Home" },
         { href: "/leaderboard", icon: Trophy, label: "Leaderboard" },
         { href: "/profile", icon: UserCircle, label: "Profile" },
     ];
