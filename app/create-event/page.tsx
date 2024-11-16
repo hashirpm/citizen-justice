@@ -1,12 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -31,6 +26,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { createEvent } from "@/components/lib/contract-txns";
+import { toast } from "@/components/hooks/use-toasts";
 
 const categories = [
     { id: "1", name: "Security" },
@@ -58,12 +55,26 @@ export default function CreateEvent() {
         },
     });
 
-    const onSubmit = (data: FormValues) => {
+    const onSubmit = async (data: FormValues) => {
         // Implement event creation logic here
-        console.log(data);
-        router.push("/");
-    };
-
+        try {
+            console.log(data);
+            await createEvent(data.description, data.location, [
+                Number(data.category),
+            ]);
+            toast({
+                title: "Event Created",
+                description: "Your event has been successfully created.",
+                variant: "default", // Optional, customize as per your toast setup
+            });
+        } catch {
+            toast({
+                title: "Error",
+                description: "Unable to create an event due to an error",
+                variant: "destructive", // Optional, customize as per your toast setup
+            });
+        }
+    }
     const { data: session } = useSession();
 
     useEffect(() => {
@@ -75,7 +86,10 @@ export default function CreateEvent() {
     return (
         <div className="container max-w-md mx-auto p-4">
             <div className="mb-6">
-                <Link href="/" className="flex items-center gap-2 text-muted-foreground">
+                <Link
+                    href="/"
+                    className="flex items-center gap-2 text-muted-foreground"
+                >
                     <ArrowLeft className="h-4 w-4" />
                     Back
                 </Link>
@@ -122,7 +136,10 @@ export default function CreateEvent() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Category</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
                                             <FormControl>
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Select a category" />

@@ -1,13 +1,7 @@
-"use client"
-
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { SignIn } from "@/components/SignIn";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 // Mock data - replace with actual data fetching
 const mockEvents = [
@@ -30,16 +24,6 @@ const mockEvents = [
 ];
 
 export default function Home() {
-
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!session) {
-      router.push("/login");
-    }
-  }, [])
-
   return (
     <div className="container max-w-md mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
@@ -51,8 +35,6 @@ export default function Home() {
           </Button>
         </Link>
       </div>
-
-      <SignIn />
 
       <div className="space-y-4">
         {mockEvents.map((event) => (
