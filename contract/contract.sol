@@ -91,10 +91,10 @@ contract CitizenJusticePlatform {
     event ReputationPenalty(address user,uint256 points);
 
     // Modifiers
-    modifier onlyVerifiedUser() {
-        require(users[msg.sender].isVerified, "User not verified");
-        _;
-    }
+    // modifier onlyVerifiedUser() {
+    //     require(users[msg.sender].isVerified, "User not verified");
+    //     _;
+    // }
     
     // modifier onlyCategoryValidator(uint256 _categoryId) {
     //     require(categories[_categoryId].isValidator[msg.sender], "Not category validator");
@@ -159,7 +159,7 @@ contract CitizenJusticePlatform {
         // uint256[] memory _categoryIds,
         uint256 _eventId,
         string memory _metadata
-    ) external onlyVerifiedUser {
+    ) external  {
 
         // require(_categoryIds.length > 0, "At least one category required");
         
@@ -205,7 +205,7 @@ contract CitizenJusticePlatform {
         string memory _description,
         string memory _location
         // uint256[] memory _categoryIds
-    ) external onlyVerifiedUser  {
+    ) external {
         require(bytes(_description).length > 0, "Description cannot be empty");
         require(bytes(_location).length > 0, "Location cannot be empty");
         // require(_categoryIds.length > 0, "At least one category required");
