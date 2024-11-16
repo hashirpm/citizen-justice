@@ -61,8 +61,8 @@ export default function Leaderboard() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {mockUsers.map((user) => (
-                            <TableRow key={user.id.toString()}>
+                        {leaderboardData.map((user) => (
+                            <TableRow key={user.id}>
                                 <TableCell className="flex items-center gap-2">
                                     {user.id.toString().slice(0, 6)}...
                                     {user.isVerified && (
@@ -71,7 +71,7 @@ export default function Leaderboard() {
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <Badge variant="secondary">
-                                        {user.reputationPoints.toString()}
+                                        {user.reputationPoints}
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="text-right">

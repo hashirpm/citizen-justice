@@ -49,6 +49,7 @@ export const getUsersByReputation = async (): Promise<User[]> => {
         query: `
             query {
                 users(orderBy: reputationPoints, orderDirection: desc) {
+                    id
                     identityHash
                     reputationPoints
                     totalSubmissions
@@ -58,5 +59,5 @@ export const getUsersByReputation = async (): Promise<User[]> => {
             }
             `,
     });
-    return response.data.data;
+    return response.data.data.users;
 }
