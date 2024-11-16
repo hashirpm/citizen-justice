@@ -72,6 +72,10 @@ export const getAllActiveEvents = async (): Promise<Event[]> => {
                         location
                         isActive
                         txHash
+                        timestamp
+                        category{
+                            id
+                        }
                         evidences{
                         evidenceHash
                     }
