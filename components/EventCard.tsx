@@ -32,12 +32,13 @@ import { Input } from "./ui/input";
 import { NILLION_APP_ID, NILLION_APP_BASE } from "./lib/const";
 import { Event } from "./lib/types";
 
-
 export default function EventCard({ event }: { event: Event }) {
   const { data: session } = useSession();
   const [selectedFile, setSelectedFile] = useState<any>();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isEvidencesLoading, setIsEvidencesLoading] = useState(false);
   const [storedImageUrl, setStoredImageUrl] = useState("");
+  const [storedImageUrls, setStoredImageUrls] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
@@ -160,6 +161,32 @@ export default function EventCard({ event }: { event: Event }) {
     setStoredImageUrl(retrievedImage.secret);
     setIsFetching(false);
   };
+  const handleViewEvidences = async () => {
+    setIsEvidencesLoading(true);
+    const APP_ID = NILLION_APP_ID;
+    const API_BASE = NILLION_APP_BASE;
+    const USER_SEED = session?.user?.name?.slice(0, 10);
+
+    let evidenceHashes = event.evidences.map((e) => e.evidenceHash);
+    try {
+      const evidenceUrls = await Promise.all(
+        event.evidences.map(async (evidence) => {
+          const response = await fetch(
+            `${API_BASE}/api/secret/retrieve/${evidence.evidenceHash}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=${evidence.evidenceHash}`
+          );
+          const retrievedData = await response.json();
+          return retrievedData.secret; // Assuming `secret` contains the URL
+        })
+      );
+      console.log({ evidenceUrls });
+      setStoredImageUrls(evidenceUrls); // This sets the URLs array
+    } catch (error) {
+      console.error("Error retrieving evidence URLs:", error);
+    } finally {
+      setIsEvidencesLoading(false);
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -261,7 +288,7 @@ export default function EventCard({ event }: { event: Event }) {
           </Button>
         </div>
       </DialogContent> */}
-      {!isSuccess &&
+      {!isSuccess && (
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{event.description}</DialogTitle>
@@ -270,7 +297,9 @@ export default function EventCard({ event }: { event: Event }) {
             {/* <input type="file" onChange={handleFileChange} /> */}
             <div className="upload-btn-wrapper mt-4 cursor-pointer">
               <Button className="btn">
-                {selectedFile != null ? selectedFile[0].name : "Select Document"}
+                {selectedFile != null
+                  ? selectedFile[0].name
+                  : "Select Document"}
               </Button>
               <Input
                 type="file"
@@ -296,13 +325,50 @@ export default function EventCard({ event }: { event: Event }) {
               )}
             </Button>
             {/* <p>{status}</p> */}
-            <Button variant="outline" className="w-full">
-              <Image className="h-4 w-4 mr-2" />
-              Show Evidences
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleViewEvidences}
+              disabled={isEvidencesLoading}
+            >
+              {isEvidencesLoading ? (
+                <>
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Image className="h-4 w-4 mr-2" />
+                  Show Evidences
+                </>
+              )}
             </Button>
+            {storedImageUrls &&
+              Array.isArray(storedImageUrls) &&
+              storedImageUrls.length > 0 && (
+                <div>
+                  <p>Retrieved Evidence Images:</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {storedImageUrls.map((url, index) => (
+                      <div key={index} className="flex flex-col items-center">
+                        <img
+                          src={url}
+                          alt={`Evidence ${index + 1}`}
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                            borderRadius: "4px",
+                            border: "1px solid #ddd",
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
         </DialogContent>
-      }
+      )}
     </Dialog>
   );
 }
