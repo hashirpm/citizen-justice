@@ -195,26 +195,44 @@ export default function EventCard({ event }: { event: Event }) {
 
     let evidenceHashes = event.evidences.map((e) => e.evidenceHash);
     try {
-         const storeIds = await fetch(
-           `${API_BASE}/api/apps/${APP_ID}/store_ids`
-         )
-           .then((res) => res.json())
-           .then((data) => data.store_ids);
-         console.log({ storeIds });
-      
+      // Fetch storeIds
+      const storeIds = await fetch(`${API_BASE}/api/apps/${APP_ID}/store_ids`)
+        .then((res) => res.json())
+        .then((data) => data.store_ids); // Assuming data.store_ids is the array
+      console.log({ storeIds });
+
+      // Filter and fetch evidence URLs
       const evidenceUrls = await Promise.all(
         event.evidences.map(async (evidence) => {
           console.log(evidence.evidenceHash);
-          const response = await fetch(
-            `${API_BASE}/api/secret/retrieve/${evidence.evidenceHash}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=evidence_${event.id}`
+
+          // Check if evidence.evidenceHash exists in storeIds
+          const matchingStore = storeIds.find(
+            (store: any) => store.store_id === evidence.evidenceHash
           );
-          const retrievedData = await response.json();
-          console.log({ retrievedData });
-          return retrievedData.secret; // Assuming `secret` contains the URL
+
+          if (matchingStore) {
+            // Fetch the secret if matching store_id is found
+            const response = await fetch(
+              `${API_BASE}/api/secret/retrieve/${matchingStore.store_id}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=${matchingStore.secret_name}`
+            );
+            const retrievedData = await response.json();
+            console.log({ retrievedData });
+            return retrievedData.secret; // Assuming `secret` contains the URL
+          } else {
+            console.warn(
+              `No matching store_id found for evidenceHash: ${evidence.evidenceHash}`
+            );
+            return null; // Handle cases where no match is found
+          }
         })
       );
-      console.log({ evidenceUrls });
-      setStoredImageUrls(evidenceUrls); // This sets the URLs array
+
+      // Filter out any null values from evidenceUrls
+      const filteredEvidenceUrls = evidenceUrls.filter((url) => url !== null);
+      console.log({ filteredEvidenceUrls });
+
+      setStoredImageUrls(filteredEvidenceUrls); // This sets the filtered URLs array
     } catch (error) {
       console.error("Error retrieving evidence URLs:", error);
     } finally {
