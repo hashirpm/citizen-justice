@@ -50,6 +50,78 @@
     "type": "event"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
+      }
+    ],
+    "name": "createCategory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_location",
+        "type": "string"
+      }
+    ],
+    "name": "createEvent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_identityHash",
+        "type": "string"
+      }
+    ],
+    "name": "createUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "availTxHash",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "availBlockHash",
+        "type": "string"
+      }
+    ],
+    "name": "deactivateEvent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -224,6 +296,34 @@
     "type": "event"
   },
   {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_evidenceHash",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_geoLocation",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_metadata",
+        "type": "string"
+      }
+    ],
+    "name": "submitEvidence",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -268,55 +368,44 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "FALSE_EVIDENCE_PENALTY",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_evidenceId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_categoryId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isValid",
+        "type": "bool"
       }
     ],
-    "stateMutability": "view",
+    "name": "validateEvidence",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "MINIMUM_REPUTATION",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "_identityHash",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "attestationId",
+        "type": "string"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "SUBMISSION_REWARD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "VALIDATION_REWARD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "verifyUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -364,78 +453,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_description",
-        "type": "string"
-      }
-    ],
-    "name": "createCategory",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_description",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_location",
-        "type": "string"
-      }
-    ],
-    "name": "createEvent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_identityHash",
-        "type": "string"
-      }
-    ],
-    "name": "createUser",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_eventId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "availTxHash",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "availBlockHash",
-        "type": "string"
-      }
-    ],
-    "name": "deactivateEvent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -585,31 +602,42 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_evidenceHash",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_geoLocation",
-        "type": "string"
-      },
+    "inputs": [],
+    "name": "FALSE_EVIDENCE_PENALTY",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "_eventId",
+        "name": "",
         "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_metadata",
-        "type": "string"
       }
     ],
-    "name": "submitEvidence",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MINIMUM_REPUTATION",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SUBMISSION_REWARD",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -657,44 +685,16 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "VALIDATION_REWARD",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "_evidenceId",
+        "name": "",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_categoryId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_isValid",
-        "type": "bool"
       }
     ],
-    "name": "validateEvidence",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_identityHash",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "attestationId",
-        "type": "string"
-      }
-    ],
-    "name": "verifyUser",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   }
 ]
