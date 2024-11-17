@@ -67,7 +67,7 @@ export const getAllActiveEvents = async (): Promise<Event[]> => {
   const response = await axios.post(GRAPH_QUERY_URL, {
     query: `
             query {
-                events{
+                events(first:1){
                         id
                         description
                         location
