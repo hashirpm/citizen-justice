@@ -109,11 +109,11 @@ export default function EventCard({ event }: { event: Event }) {
       if (selectedFile) {
         const result = await uploadEvidence(selectedFile[0], event.id);
 
-        let categoryIds = event.categoryIds.map((id) => Number(id));
+        // let categoryIds = event.categoryIds.map((id) => Number(id));
         const { commandPayload, finalPayload } = await submitEvidence(
           result.result.store_id,
           "w4rw063p",
-          categoryIds,
+          [0],
           Number(event.id),
           "metadata"
         );
