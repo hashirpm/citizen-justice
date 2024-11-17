@@ -39,6 +39,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { getEnsOrAddress } from "@/components/lib/ens";
+import Link from "next/link";
 // Mock data - replace with actual data fetching
 const mockuser = {
     id: "0x123",
@@ -162,9 +163,6 @@ export default function Profile() {
                     <TabsTrigger value="evidences" className="flex-1">
                         Evidences
                     </TabsTrigger>
-                    <TabsTrigger value="categories" className="flex-1">
-                        Categories
-                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="events">
@@ -195,7 +193,8 @@ export default function Profile() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Event ID</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Validated</TableHead>
+                                <TableHead>Explorer</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -203,8 +202,13 @@ export default function Profile() {
                                 <TableRow key={evidence.id}>
                                     <TableCell>{evidence.id}</TableCell>
                                     <TableCell>
-                                        <Badge>evidence.status</Badge>
+                                        {evidence.hasValidated ? "✅" : "❌"}
                                     </TableCell>
+                                    <Link href={`https://worldchain-mainnet.explorer.alchemy.com/tx/${evidence.txHash}`}>
+                                        <TableCell className="underline text-center">
+                                            View
+                                        </TableCell>
+                                    </Link>
                                 </TableRow>
                             ))}
                         </TableBody>
