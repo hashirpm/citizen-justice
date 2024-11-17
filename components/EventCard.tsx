@@ -195,6 +195,13 @@ export default function EventCard({ event }: { event: Event }) {
 
     let evidenceHashes = event.evidences.map((e) => e.evidenceHash);
     try {
+         const storeIds = await fetch(
+           `${API_BASE}/api/apps/${APP_ID}/store_ids`
+         )
+           .then((res) => res.json())
+           .then((data) => data.store_ids);
+         console.log({ storeIds });
+      
       const evidenceUrls = await Promise.all(
         event.evidences.map(async (evidence) => {
           console.log(evidence.evidenceHash);
@@ -368,7 +375,7 @@ export default function EventCard({ event }: { event: Event }) {
               {isEvidencesLoading ? (
                 <>
                   <Loader className="h-4 w-4 mr-2 animate-spin" />
-                  Uploading...
+                  Loading...
                 </>
               ) : (
                 <>
