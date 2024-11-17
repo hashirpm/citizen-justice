@@ -282,7 +282,7 @@ export default function EventCard({ event }: { event: Event }) {
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     <span>
-                      {formatDistanceToNow(Number(event.timestamp), {
+                      {formatDistanceToNow(Number(event.timestamp) * 1000, {
                         addSuffix: true,
                       })}
                     </span>
