@@ -7,8 +7,8 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { validateEvidence, verifyUser } from "@/components/lib/contract-txns";
-import { getAllActiveEvents } from "@/components/lib/graph";
+import { createUser, validateEvidence, verifyUser } from "@/components/lib/contract-txns";
+import { checkUserExists, getAllActiveEvents } from "@/components/lib/graph";
 import { Event } from "@/components/lib/types";
 import WelcomeDialog from "@/components/WelcomeDialog";
 
@@ -43,13 +43,22 @@ export default function Home() {
       router.push("/login");
     }
 
+    let userExistes = checkUserExists(session?.user?.name as any)
+
     async function fetchData() {
+      if (!userExistes) {
+        await createUser(session?.user?.name as any)
+      }
       let events = await getAllActiveEvents()
       setEvents(events)
     }
 
     fetchData()
   }, [])
+
+  useEffect(() => {
+
+  }, []);
 
   return (
     <div className="container max-w-md mx-auto p-4">

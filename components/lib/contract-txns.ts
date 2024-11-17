@@ -94,6 +94,32 @@ export const validateEvidence = async (evidenceId: number, categoryId: number, i
     return { commandPayload, finalPayload }
 }
 
+export const createUser = async (identityHash: string) => {
+    const { commandPayload, finalPayload } = await MiniKit.commandsAsync.sendTransaction({
+        transaction: [
+            {
+                address: CONTRACT_ADDRESS,
+                abi: [{
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_identityHash",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "createUser",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }],
+                functionName: 'createUser',
+                args: [identityHash],
+            },
+        ],
+    })
+    return { commandPayload, finalPayload }
+}
+
 export const submitEvidence = async (evidenceHash: string, geoLocation: string, categoryIds: number[], eventId: number, metadata: string) => {
     const { commandPayload, finalPayload } = await MiniKit.commandsAsync.sendTransaction({
         transaction: [

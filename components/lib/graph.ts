@@ -86,3 +86,17 @@ export const getAllActiveEvents = async (): Promise<Event[]> => {
   });
   return response.data.data.events;
 };
+
+
+export const checkUserExists = async (identityHash: string): Promise<boolean> => {
+  const response = await axios.post(GRAPH_QUERY_URL, {
+    query: `
+            query{
+                users( where: {identityHash: "${identityHash.toLowerCase()}"}) {
+                    id
+                }
+            }
+            `,
+  });
+  return response.data.data.users.length > 0;
+}
