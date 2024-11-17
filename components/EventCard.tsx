@@ -290,12 +290,12 @@ export default function EventCard({ event }: { event: Event }) {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-between">
-                {
+                {/* {
                   session?.user?.name == event.creator.id &&
                   <Button className="text-xs text-muted-foreground">
                     Close & Publish
                   </Button>
-                }
+                } */}
                 <div className="text-xs text-muted-foreground">
                   Status: {event.isActive ? "Active" : "Closed"}
                 </div>
