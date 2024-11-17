@@ -43,7 +43,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function CreateEvent() {
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
-   const [txHash, setTxHash] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,9 +63,10 @@ export default function CreateEvent() {
         [Number(data.category)]
       );
       if (finalPayload.status == "success") {
-        await sendEventCreatedNotification(data.description)
         setIsSuccess(true);
         setTxHash(finalPayload.transaction_id);
+        await sendEventCreatedNotification(data.description);
+
         // await createCategory(data.description, data.description);
         toast({
           title: "Event Created",
