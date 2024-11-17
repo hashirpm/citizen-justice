@@ -414,12 +414,7 @@ export default function EventCard({ event }: { event: Event }) {
                         <img
                           src={url}
                           alt={`Evidence ${index + 1}`}
-                          style={{
-                            maxWidth: "100%",
-                            height: "auto",
-                            borderRadius: "4px",
-                            border: "1px solid #ddd",
-                          }}
+                          className="w-full max-w-md h-auto rounded-lg border border-gray-300"
                         />
                       </div>
                     ))}
