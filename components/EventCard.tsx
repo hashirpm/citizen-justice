@@ -31,7 +31,7 @@ import { useSession } from "next-auth/react";
 import { Input } from "./ui/input";
 import { NILLION_APP_ID, NILLION_APP_BASE } from "./lib/const";
 import { Event } from "./lib/types";
-import confetti from 'canvas-confetti';
+import confetti from "canvas-confetti";
 
 export default function EventCard({ event }: { event: Event }) {
   const { data: session } = useSession();
@@ -124,10 +124,10 @@ export default function EventCard({ event }: { event: Event }) {
             title: "Evidence uploaded to nillion!",
             variant: "default", // Optional, customize as per your toast setup
           });
-          var end = Date.now() + (3 * 1000);
+          var end = Date.now() + 3 * 1000;
 
           // go Buckeyes!
-          var colors = ['#bb0000', '#ffffff'];
+          var colors = ["#bb0000", "#ffffff"];
 
           (function frame() {
             confetti({
@@ -135,20 +135,20 @@ export default function EventCard({ event }: { event: Event }) {
               angle: 60,
               spread: 55,
               origin: { x: 0 },
-              colors: colors
+              colors: colors,
             });
             confetti({
               particleCount: 2,
               angle: 120,
               spread: 55,
               origin: { x: 1 },
-              colors: colors
+              colors: colors,
             });
 
             if (Date.now() < end) {
               requestAnimationFrame(frame);
             }
-          }());
+          })();
           console.log(result);
         }
         setIsUploading(false);
@@ -197,12 +197,12 @@ export default function EventCard({ event }: { event: Event }) {
     try {
       const evidenceUrls = await Promise.all(
         event.evidences.map(async (evidence) => {
-            console.log(evidence.evidenceHash)
+          console.log(evidence.evidenceHash);
           const response = await fetch(
-            `${API_BASE}/api/secret/retrieve/${evidence.evidenceHash}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=${evidence.evidenceHash}`
+            `${API_BASE}/api/secret/retrieve/${evidence.evidenceHash}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=evidence_${event.id}`
           );
           const retrievedData = await response.json();
-          console.log({retrievedData})
+          console.log({ retrievedData });
           return retrievedData.secret; // Assuming `secret` contains the URL
         })
       );
