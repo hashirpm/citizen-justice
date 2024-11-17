@@ -197,10 +197,12 @@ export default function EventCard({ event }: { event: Event }) {
     try {
       const evidenceUrls = await Promise.all(
         event.evidences.map(async (evidence) => {
+            console.log(evidence.evidenceHash)
           const response = await fetch(
             `${API_BASE}/api/secret/retrieve/${evidence.evidenceHash}?retrieve_as_nillion_user_seed=${USER_SEED}&secret_name=${evidence.evidenceHash}`
           );
           const retrievedData = await response.json();
+          console.log({retrievedData})
           return retrievedData.secret; // Assuming `secret` contains the URL
         })
       );
