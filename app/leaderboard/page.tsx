@@ -109,11 +109,11 @@ export default function Leaderboard() {
                                 <div className="text-sm text-muted-foreground">
                                     Success Rate:{" "}
                                     <span className="text-primary font-medium">
-                                        {(
+                                        {Number(user?.totalSubmissions) != 0 ? (
                                             (Number(user.acceptedSubmissions) /
                                                 Number(user.totalSubmissions)) *
                                             100
-                                        ).toFixed(0)}
+                                        ).toFixed(0) : 0}
                                         %
                                     </span>
                                 </div>
@@ -132,9 +132,9 @@ export default function Leaderboard() {
                             <div
                                 className="h-full bg-primary transition-all"
                                 style={{
-                                    width: `${(Number(user.acceptedSubmissions) /
-                                        Number(user.totalSubmissions)) *
-                                        100}%`,
+                                    width: `${Number(user?.totalSubmissions) != 0 ? (Number(user.acceptedSubmissions) /
+                                        Number(user.totalSubmissions)) : 0 *
+                                    100}%`,
                                 }}
                             />
                         </div>

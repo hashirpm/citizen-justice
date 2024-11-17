@@ -143,11 +143,11 @@ export default function Profile() {
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Success Rate</span>
                             <span>
-                                {(
+                                {Number(user?.totalSubmissions) != 0 ? (
                                     (Number(user?.acceptedSubmissions) /
                                         Number(user?.totalSubmissions)) *
                                     100
-                                ).toFixed(0)}
+                                ).toFixed(0) : 0}
                                 %
                             </span>
                         </div>
