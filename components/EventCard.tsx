@@ -242,96 +242,97 @@ export default function EventCard({ event }: { event: Event }) {
 
   return (
     <Dialog>
+      {" "}
+      {isSuccess && (
+        <>
+          <div className="flex flex-col items-center justify-center p-6 text-center">
+            <CheckCircle className="h-12 w-12 text-green-500" />
+            <h2 className="mt-4 text-xl font-semibold">
+              Evidence added Successfully!
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Your evidence has been successfully added.
+            </p>
+            {txHash && (
+              <a
+                href={`https://worldchain-mainnet.explorer.alchemy.com/tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline mt-4"
+              >
+                View Transaction on Blockscout
+              </a>
+            )}
+            <button
+              onClick={handleViewImage}
+              className="text-blue-600 hover:underline mt-4"
+              disabled={isFetching}
+            >
+              {isFetching ? (
+                <>
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                  Fetching...
+                </>
+              ) : (
+                <>View uploaded evidence from Nillion</>
+              )}
+            </button>
+            {storedImageUrl && (
+              <div>
+                <p style={{ marginBottom: "10px", fontWeight: "500" }}>
+                  Retrieved Image:
+                </p>
+                <img
+                  src={storedImageUrl}
+                  alt="Retrieved from Nillion"
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
       <DialogTrigger asChild>
         <Card className="cursor-pointer hover:shadow-lg transition-shadow">
-          {isSuccess ? (
-            <div className="flex flex-col items-center justify-center p-6 text-center">
-              <CheckCircle className="h-12 w-12 text-green-500" />
-              <h2 className="mt-4 text-xl font-semibold">
-                Evidence added Successfully!
-              </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Your evidence has been successfully added.
-              </p>
-              {txHash && (
-                <a
-                  href={`https://worldchain-mainnet.explorer.alchemy.com/tx/${txHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline mt-4"
-                >
-                  View Transaction on Blockscout
-                </a>
-              )}
-              <button
-                onClick={handleViewImage}
-                className="text-blue-600 hover:underline mt-4"
-                disabled={isFetching}
-              >
-                {isFetching ? (
-                  <>
-                    <Loader className="h-4 w-4 mr-2 animate-spin" />
-                    Fetching...
-                  </>
-                ) : (
-                  <>View uploaded evidence from Nillion</>
-                )}
-              </button>
-              {storedImageUrl && (
-                <div>
-                  <p style={{ marginBottom: "10px", fontWeight: "500" }}>
-                    Retrieved Image:
-                  </p>
-                  <img
-                    src={storedImageUrl}
-                    alt="Retrieved from Nillion"
-                    style={{
-                      maxWidth: "100%",
-                      height: "auto",
-                      borderRadius: "4px",
-                      border: "1px solid #ddd",
-                    }}
-                  />
+          <>
+            <CardHeader>
+              <CardTitle className="text-lg">{event.description}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>{event.location}</span>
                 </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <CardHeader>
-                <CardTitle className="text-lg">{event.description}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    <span>{event.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>
-                      {formatDistanceToNow(Number(event.timestamp) * 1000, {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  <span>
+                    {formatDistanceToNow(Number(event.timestamp) * 1000, {
+                      addSuffix: true,
+                    })}
+                  </span>
                 </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                {/* {
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              {/* {
                   session?.user?.name == event.creator.id &&
                   <Button className="text-xs text-muted-foreground">
                     Close & Publish
                   </Button>
                 } */}
-                <div className="text-xs text-muted-foreground">
-                  Status: {event.isActive ? "Active" : "Closed"}
-                </div>
-              </CardFooter>
-            </>
-          )}
+              <div className="text-xs text-muted-foreground">
+                Status: {event.isActive ? "Active" : "Closed"}
+              </div>
+            </CardFooter>
+          </>
         </Card>
       </DialogTrigger>
-
       {/* <DialogContent>
         <DialogHeader>
           <DialogTitle>{event.description}</DialogTitle>
