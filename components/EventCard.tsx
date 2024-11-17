@@ -408,7 +408,7 @@ export default function EventCard({ event }: { event: Event }) {
               storedImageUrls.length > 0 && (
                 <div>
                   <p>Retrieved Evidence Images:</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
                     {storedImageUrls.map((url, index) => (
                       <div key={index} className="flex flex-col items-center">
                         <img
