@@ -29,7 +29,6 @@ import { submitEvidence } from "./lib/contract-txns";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Input } from "./ui/input";
-import { NILLION_APP_ID, NILLION_APP_BASE } from "./lib/const";
 import { Event } from "./lib/types";
 import confetti from "canvas-confetti";
 
@@ -61,8 +60,8 @@ export default function EventCard({ event }: { event: Event }) {
         };
         reader.readAsDataURL(file);
       });
-      const APP_ID = NILLION_APP_ID;
-      const API_BASE = NILLION_APP_BASE;
+      const APP_ID = process.env.NILLION_APP_ID;
+      const API_BASE = process.env.NILLION_APP_BASE;
 
       console.log("APP_ID", APP_ID);
       console.log("API_BASE", API_BASE);
@@ -169,8 +168,8 @@ export default function EventCard({ event }: { event: Event }) {
   };
   const handleViewImage = async () => {
     setIsFetching(true);
-    const APP_ID = NILLION_APP_ID;
-    const API_BASE = NILLION_APP_BASE;
+    const APP_ID = process.env.NILLION_APP_ID;
+    const API_BASE = process.env.NILLION_APP_BASE;
     const USER_SEED = session?.user?.name?.slice(0, 10);
 
     const storeIds = await fetch(`${API_BASE}/api/apps/${APP_ID}/store_ids`)
@@ -189,8 +188,8 @@ export default function EventCard({ event }: { event: Event }) {
   };
   const handleViewEvidences = async () => {
     setIsEvidencesLoading(true);
-    const APP_ID = NILLION_APP_ID;
-    const API_BASE = NILLION_APP_BASE;
+    const APP_ID = process.env.NILLION_APP_ID;
+    const API_BASE = process.env.NILLION_APP_BASE;
     const USER_SEED = session?.user?.name?.slice(0, 10);
 
     let evidenceHashes = event.evidences.map((e) => e.evidenceHash);

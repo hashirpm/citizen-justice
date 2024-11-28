@@ -7,7 +7,7 @@ export const submitAndRecieveData = async (data: string) => {
   const sdk = await SDK.New(providerEndpoint);
 
   const private_key =
-    "pink fish prosper simple dutch enforce young december spot guitar summer whisper";
+    process.env.PRIVATE_KEY_AVAIL;
   if (!private_key) {
     throw new Error("Environment variable private_key is required.");
   }

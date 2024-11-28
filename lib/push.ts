@@ -7,9 +7,8 @@ import { ethers } from "ethers";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import fs from "fs";
 
-const GEMINI_API_KEY = "AIzaSyCmHmyTnhofdOwI6vnoiS8wXyBWBez4mQU";
-const PRIVATE_KEY =
-  "584799f49952962b0022fff8ada7e36d319b0578b6809f2ffcf540b227673cf5";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 if (!GEMINI_API_KEY || !PRIVATE_KEY) {
   throw new Error(
     "Required environment variables GEMINI_API_KEY or PRIVATE_KEY are missing."
@@ -18,7 +17,6 @@ if (!GEMINI_API_KEY || !PRIVATE_KEY) {
 
 // Create a new instance of GoogleGenerativeAI with the current API key
 function createGenAIInstance(): GoogleGenerativeAI {
-  const GEMINI_API_KEY = "AIzaSyCmHmyTnhofdOwI6vnoiS8wXyBWBez4mQU";
 
   if (!GEMINI_API_KEY) {
     throw new Error("Environment variable GEMINI_API_KEY is required.");
